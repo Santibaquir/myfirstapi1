@@ -4,8 +4,7 @@ import co.edu.umanizales.myfirstapi1.Model.Location;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +12,12 @@ import java.util.List;
 public class LocationService {
 
     public List<Location> readLocationsFromCSV() {
-        List<Location> locations = new ArrayList<>();
+        List<Location> locations = new ArrayList<>()
+                ;
 
-        try (InputStream is = getClass().getResourceAsStream("/DIVIPOLA-_C_digos_municipios_20250408.csv");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/java/co/edu/umanizales/myfirstapi1/Service/DIVIPOLA-_C_digos_municipios_20250408.csv"))
+            ;)
+        {
 
             String line;
             boolean firstLine = true;
@@ -27,11 +28,23 @@ public class LocationService {
                     continue;
                 }
 
-                String[] parts = line.split(",", -1); // separa por coma
-                if (parts.length >= 2) {
-                    String code = parts[0].trim();
-                    String description = parts[1].trim();
-                    locations.add(new Location(code, description));
+                String[] parts = line.split(",", -1);
+                if (parts.length >= 7) {
+                    String codDepto = parts[0].trim();
+                    String nombreDepto = parts[1].trim();
+                    String codMun = parts[2].trim();
+                    String nombreMun = parts[3].trim();
+                    String tipo = parts[4].trim();
+                    String longitud = parts[5].replace("\"", "").trim();
+                    String latitud = parts[6].replace("\"", "").trim();
+
+                    System.out.println("Código Depto: " + codDepto +
+                            " - Nombre Depto: " + nombreDepto +
+                            " - Código Mun: " + codMun +
+                            " - Nombre Mun: " + nombreMun +
+                            " - Tipo: " + tipo +
+                            " - Longitud: " + longitud +
+                            " - Latitud: " + latitud);
                 }
             }
         } catch (Exception e) {
