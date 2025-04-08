@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class store{
+public class Store {
     private String code;
     private String name;
     private String description;

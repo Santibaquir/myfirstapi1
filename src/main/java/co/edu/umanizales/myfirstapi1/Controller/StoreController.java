@@ -1,7 +1,7 @@
 package co.edu.umanizales.myfirstapi1.Controller;
 
 import co.edu.umanizales.myfirstapi1.Model.Location;
-import co.edu.umanizales.myfirstapi1.Model.store;
+import co.edu.umanizales.myfirstapi1.Model.Store;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
 
     @GetMapping
-    public store getStore() {
-        return new store(
+    public Store getStore() {
+        return new Store(
                 "S001",
                 "Tienda Principal",
                 "Una tienda de productos variados",
