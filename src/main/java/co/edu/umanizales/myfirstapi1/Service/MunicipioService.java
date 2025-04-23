@@ -1,54 +1,55 @@
 
-        package co.edu.umanizales.myfirstapi1.Service;
+package co.edu.umanizales.myfirstapi1.Service;
 
 import co.edu.umanizales.myfirstapi1.Model.Municipio;
+import com.opencsv.CSVReader;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MunicipioService {
+    private List<Municipio> municipios = new ArrayList<>();
 
-    public List<Municipio> leerMunicipiosDesdeCSV() {
-        List<Municipio> municipios = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(
-                new FileReader("src/main/resources/DIVIPOLA-_C_digos_municipios_20250408.csv"))) {
-
-            br.readLine(); // Saltar encabezado
-
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] partes = linea.split(";");
-                if (partes.length >= 7) {
-                    String codDepto = partes[0];
-                    String nombreDepto = partes[1];
-                    String codMun = partes[2];
-                    String nombreMun = partes[3];
-                    String tipo = partes[4];
-
-                    double longitud = Double.parseDouble(partes[5].replace(",", ".").trim());
-                    double latitud = Double.parseDouble(partes[6].replace(",", ".").trim());
-
-                    municipios.add(new Municipio(codDepto, nombreDepto, codMun, nombreMun, tipo, longitud, latitud));
-
-                    // Imprimir para verificar
-                    System.out.println("Código Depto: " + codDepto +
-                            " - Nombre Depto: " + nombreDepto +
-                            " - Código Mun: " + codMun +
-                            " - Nombre Mun: " + nombreMun +
-                            " - Tipo: " + tipo +
-                            " - Longitud: " + longitud +
-                            " - Latitud: " + latitud);
+    @PostConstruct
+    public void init() {
+        try (CSVReader reader = new CSVReader(
+                new InputStreamReader(getClass().getResourceAsStream("/DIVIPOLA-_C_digos_municipios_20250408.csv")))) {
+            String[] line;
+            reader.readNext(); // Saltar encabezado
+            while ((line = reader.readNext()) != null) {
+                if (line.length >= 3) {
+                    municipios.add(new Municipio(line[0], line[1], line[2]));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public List<Municipio> getAll() {
         return municipios;
+    }
+
+    public List<Municipio> buscarPorNombre(String nombre) {
+        return municipios.stream()
+                .filter(m -> m.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Municipio> buscarPorCodigo(String codigo) {
+        return municipios.stream()
+                .filter(m -> m.getCodigo().equalsIgnoreCase(codigo))
+                .collect(Collectors.toList());
+    }
+
+    public List<Municipio> buscarPorDepartamento(String departamento) {
+        return municipios.stream()
+                .filter(m -> m.getDepartamento().equalsIgnoreCase(departamento))
+                .collect(Collectors.toList());
     }
 }

@@ -2,9 +2,7 @@ package co.edu.umanizales.myfirstapi1.Controller;
 
 import co.edu.umanizales.myfirstapi1.Model.Municipio;
 import co.edu.umanizales.myfirstapi1.Service.MunicipioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,22 @@ public class MunicipioController {
     }
 
     @GetMapping("/todos")
-    public List<Municipio> obtenerMunicipios() {
-        return municipioService.leerMunicipiosDesdeCSV();
+    public List<Municipio> getAll() {
+        return municipioService.getAll();
+    }
+
+    @GetMapping("/nombre/{nombre}")
+    public List<Municipio> buscarPorNombre(@PathVariable String nombre) {
+        return municipioService.buscarPorNombre(nombre);
+    }
+
+    @GetMapping("/codigo/{codigo}")
+    public List<Municipio> buscarPorCodigo(@PathVariable String codigo) {
+        return municipioService.buscarPorCodigo(codigo);
+    }
+
+    @GetMapping("/departamento/{departamento}")
+    public List<Municipio> buscarPorDepartamento(@PathVariable String departamento) {
+        return municipioService.buscarPorDepartamento(departamento);
     }
 }
