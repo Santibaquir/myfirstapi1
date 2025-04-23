@@ -23,4 +23,3 @@ public class MunicipioController {
         return municipioService.leerMunicipiosDesdeCSV();
     }
 }
-
