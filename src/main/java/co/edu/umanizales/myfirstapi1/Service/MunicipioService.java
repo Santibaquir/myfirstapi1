@@ -1,4 +1,5 @@
-package co.edu.umanizales.myfirstapi1.Service;
+
+        package co.edu.umanizales.myfirstapi1.Service;
 
 import co.edu.umanizales.myfirstapi1.Model.Municipio;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class MunicipioService {
         List<Municipio> municipios = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(
-                new FileReader("src/main/java/co/edu/umanizales/myfirstapi1/Service/DIVIPOLA-_C_digos_municipios_20250408.csv"))) {
+                new FileReader("src/main/resources/DIVIPOLA-_C_digos_municipios_20250408.csv"))) {
 
             br.readLine(); // Saltar encabezado
 
@@ -28,8 +29,9 @@ public class MunicipioService {
                     String codMun = partes[2];
                     String nombreMun = partes[3];
                     String tipo = partes[4];
-                    double longitud = Double.parseDouble(partes[5]);
-                    double latitud = Double.parseDouble(partes[6]);
+
+                    double longitud = Double.parseDouble(partes[5].replace(",", ".").trim());
+                    double latitud = Double.parseDouble(partes[6].replace(",", ".").trim());
 
                     municipios.add(new Municipio(codDepto, nombreDepto, codMun, nombreMun, tipo, longitud, latitud));
 
