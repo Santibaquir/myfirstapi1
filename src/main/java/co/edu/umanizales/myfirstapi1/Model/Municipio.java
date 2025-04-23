@@ -1,5 +1,10 @@
 package co.edu.umanizales.myfirstapi1.Model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Municipio {
     private String codigoDepartamento;
     private String nombreDepartamento;
@@ -9,9 +14,7 @@ public class Municipio {
     private double longitud;
     private double latitud;
 
-    public Municipio(String s, String string, String s1) {
-    }
-
+    // Constructor completo
     public Municipio(String codigoDepartamento, String nombreDepartamento, String codigoMunicipio,
                      String nombreMunicipio, String tipo, double longitud, double latitud) {
         this.codigoDepartamento = codigoDepartamento;
@@ -23,59 +26,23 @@ public class Municipio {
         this.latitud = latitud;
     }
 
-    public String getCodigoDepartamento() {
-        return codigoDepartamento;
-    }
-
-    public void setCodigoDepartamento(String codigoDepartamento) {
+    // Constructor con parámetros básicos
+    public Municipio(String codigoDepartamento, String nombreDepartamento, String codigoMunicipio) {
         this.codigoDepartamento = codigoDepartamento;
-    }
-
-    public String getNombreDepartamento() {
-        return nombreDepartamento;
-    }
-
-    public void setNombreDepartamento(String nombreDepartamento) {
         this.nombreDepartamento = nombreDepartamento;
-    }
-
-    public String getCodigoMunicipio() {
-        return codigoMunicipio;
-    }
-
-    public void setCodigoMunicipio(String codigoMunicipio) {
         this.codigoMunicipio = codigoMunicipio;
     }
 
-    public String getNombreMunicipio() {
+    // Métodos alias para mantener compatibilidad con código existente
+    public String getNombre() {
         return nombreMunicipio;
     }
 
-    public void setNombreMunicipio(String nombreMunicipio) {
-        this.nombreMunicipio = nombreMunicipio;
+    public String getCodigo() {
+        return codigoMunicipio;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    public double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
+    public String getDepartamento() {
+        return nombreDepartamento;
     }
 }

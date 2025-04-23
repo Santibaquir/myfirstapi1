@@ -1,12 +1,16 @@
-
 package co.edu.umanizales.myfirstapi1.Service;
 
 import co.edu.umanizales.myfirstapi1.Model.Municipio;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,16 +21,69 @@ public class MunicipioService {
 
     @PostConstruct
     public void init() {
-        try (CSVReader reader = new CSVReader(
-                new InputStreamReader(getClass().getResourceAsStream("/DIVIPOLA-_C_digos_municipios_20250408.csv")))) {
+        try {
+            // Usar ClassPathResource para acceder al archivo en resources
+            ClassPathResource resource = new ClassPathResource("DIVIPOLA-_C_digos_municipios_20250408.csv");
+            Reader reader = new InputStreamReader(resource.getInputStream());
+
+            // Configurar el parser de CSV para manejar correctamente las comillas
+            CSVParser parser = new CSVParserBuilder()
+                    .withSeparator(',')
+                    .withQuoteChar('"')
+                    .build();
+
+            CSVReader csvReader = new CSVReaderBuilder(reader)
+                    .withCSVParser(parser)
+                    .build();
+
             String[] line;
-            reader.readNext(); // Saltar encabezado
-            while ((line = reader.readNext()) != null) {
-                if (line.length >= 3) {
-                    municipios.add(new Municipio(line[0], line[1], line[2]));
+            csvReader.readNext(); // Saltar encabezado
+
+            while ((line = csvReader.readNext()) != null) {
+                if (line.length >= 7) {
+                    try {
+                        String codDepto = line[0].trim();
+                        String nombreDepto = line[1].trim();
+                        String codMun = line[2].trim();
+                        String nombreMun = line[3].trim();
+                        String tipo = line[4].trim();
+
+                        // Procesar longitud y latitud que pueden contener comas
+                        double longitud = 0.0;
+                        double latitud = 0.0;
+
+                        if (line[5] != null && !line[5].isEmpty()) {
+                            String longitudStr = line[5].replace("\"", "").replace(",", ".");
+                            longitud = Double.parseDouble(longitudStr);
+                        }
+
+                        if (line[6] != null && !line[6].isEmpty()) {
+                            String latitudStr = line[6].replace("\"", "").replace(",", ".");
+                            latitud = Double.parseDouble(latitudStr);
+                        }
+
+                        Municipio municipio = new Municipio(
+                                codDepto,
+                                nombreDepto,
+                                codMun,
+                                nombreMun,
+                                tipo,
+                                longitud,
+                                latitud
+                        );
+                        municipios.add(municipio);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error al parsear valores numéricos en línea: " +
+                                String.join(",", line) + " - " + e.getMessage());
+                    }
                 }
             }
+
+            csvReader.close();
+            System.out.println("Cargados " + municipios.size() + " municipios desde el CSV.");
+
         } catch (Exception e) {
+            System.err.println("Error al cargar el archivo CSV: " + e.getMessage());
             e.printStackTrace();
         }
     }
