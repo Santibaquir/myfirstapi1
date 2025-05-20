@@ -49,6 +49,8 @@ public class LocationController {
         if (locations.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
         return new ResponseEntity<>(locations, HttpStatus.OK);
     }
+
 }
