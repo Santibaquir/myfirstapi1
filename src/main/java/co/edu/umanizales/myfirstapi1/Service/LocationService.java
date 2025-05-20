@@ -1,90 +1,93 @@
 package co.edu.umanizales.myfirstapi1.Service;
 
-import co.edu.umanizales.myfirstapi1.Model.Location;
-import org.springframework.core.io.ClassPathResource;
+import co.edu.umanizales.myfirstapi.model.Location;
+import co.edu.umanizales.myfirstapi.repository.LocationRepository;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Service
+
 public class LocationService {
 
-    // Lista para cachear las ubicaciones después de leerlas la primera vez
-    private List<Location> locationCache = null;
+    private final LocationRepository locationRepository;
 
-    public List<Location> readLocationsFromCSV() {
-        // Si ya leímos las ubicaciones anteriormente, devolvemos la caché
-        if (locationCache != null && !locationCache.isEmpty()) {
-            return locationCache;
+    public LocationService(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
+    }
+
+    public List<Location> getAllLocations() {
+        return locationRepository.getAllLocations();
+    }
+
+    public Location getLocationByCode(String code) {
+        return locationRepository.getLocationByCode(code);
+    }
+
+    public List<Location> getLocationByName(String name) {
+        return locationRepository.getLocationsByName(name);
+    }
+
+    public List<Location> getLocationsByInitialLetter(String initialLetter) {
+        List<Location> locationsByInitial = new ArrayList<>();
+        for (Location location : locationRepository.getAllLocations()) {
+            if (location.getName().startsWith(initialLetter)) {
+                locationsByInitial.add(location);
+            }
         }
+        return locationsByInitial;
+    }
 
+    public List<Location> getLocationByDepartmentCode(String departmentCode) {
+        List<Location> locationsByDepartment = new ArrayList<>();
+        for (Location location : locationRepository.getAllLocations()) {
+            if (location.getCode().startsWith(departmentCode)) {
+                locationsByDepartment.add(location);
+            }
+        }
+        return locationsByDepartment;
+    }
+
+    public List<Location> getAllDepartments() {
+        return locationRepository.getAllDepartments();
+    }
+
+    public Location getDepartmentByCode(String code) {
+        if (code.length() != 2) {
+            System.out.println("Código: " + code + " no es válido para buscar departamentos. por favor ingrese un código de 2 dígitos"); //Si el código es inválido mostrará un error
+            return null;
+        }
+        for (Location location : locationRepository.getAllDepartments()) {
+            if (location.getCode().equals(code)) {
+                return location;
+            }
+        }
+        System.out.println("Departmento no encontrado con código: " + code);
+        return null;
+    }
+
+    public List<Location> getCapitals() {
+        List<Location> capitals = new ArrayList<>();
+        for (Location location : locationRepository.getAllLocations()) {
+            if (location.getCode().endsWith("001")) {
+                capitals.add(location);
+            }
+        }
+        return capitals;
+    }
+
+    public List<Location> getLocationByParameters(String initialLetter, String finalLetter) {
         List<Location> locations = new ArrayList<>();
-
-        try {
-            ClassPathResource resource = new ClassPathResource("DIVIPOLA-_C_digos_municipios_20250408.csv");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-
-            String line;
-            boolean firstLine = true;
-
-            while ((line = reader.readLine()) != null) {
-                if (firstLine) { // saltar encabezado
-                    firstLine = false;
-                    continue;
-                }
-
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 7) {
-                    // Código del municipio y nombre del municipio
-                    String code = parts[2].trim();
-                    String description = parts[3].trim();
-
-                    // Añadir la ubicación a la lista
-                    locations.add(new Location(code, description));
-                }
-            }
-            reader.close();
-            System.out.println("Cargadas " + locations.size() + " ubicaciones desde el CSV.");
-
-            // Guardamos las ubicaciones en caché para futuras consultas
-            locationCache = locations;
-
-        } catch (Exception e) {
-            System.err.println("Error al cargar ubicaciones: " + e.getMessage());
-            e.printStackTrace();
-            // Si ocurre un error pero ya teníamos datos en caché, los devolvemos
-            if (locationCache != null && !locationCache.isEmpty()) {
-                return locationCache;
+        for (Location location : locationRepository.getAllLocations()) {
+            if (location.getName().startsWith(initialLetter) && location.getName().endsWith(finalLetter)) {
+                locations.add(location);
             }
         }
-
         return locations;
     }
-
-    public Location findLocationByCode(String code) {
-        List<Location> locations = readLocationsFromCSV();
-        return locations.stream()
-                .filter(location -> location.getCode().equals(code))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Location> findLocationsByDescription(String description) {
-        List<Location> locations = readLocationsFromCSV();
-        List<Location> result = new ArrayList<>();
-
-        for (Location location : locations) {
-            if (location.getDescription().toLowerCase().contains(description.toLowerCase())) {
-                result.add(location);
-            }
-        }
-
-        return result;
-    }
-
-
 }
+
 
