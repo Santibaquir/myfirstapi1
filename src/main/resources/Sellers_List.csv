@@ -1,6 +1,6 @@
-Cédula;Nombre;Apellido;CódigoMunicipio;Género;Edad
-1001;Carlos;Gómez;170001;M;30
-1002;Laura;Martínez;170002;F;25
-1003;Pedro;Ruiz;050001;M;28
-1004;Ana;López;050002;F;32
-1005;Luis;Torres;110001;M;29
+Cédula ,Nombre,Apellido,CódigoMunicipio,Género,Edad
+1001,Carlos,Gómez,05001,M,30
+1002,Laura,Martínez;05002,F,25
+1003,Pedro,Ruiz;05004,M,28
+1004,Ana,López;17001,F,32
+1005,Luis,Torres;17013;M,29

@@ -1,6 +1,6 @@
-CódigoTienda;NombreTienda;CódigoMunicipio;Dirección
-S001;Tienda Central;170001;Cra 15 #12-20
-S002;Sucursal Villamaría;170002;Calle 10 #5-50
-S003;Punto Medellín;050001;Av Oriental #30
-S004;Mega Envigado;050002;Calle 25 #6-70
-S005;Centro Bogotá;110001;Calle 13 #8-40
+CódigoTienda,NombreTienda,CódigoMunicipio,Dirección
+S001,Almacén Central,05001,Cra 10 #20-30
+S002,Sucursal Abejorral,05002,Calle 5 #3-15
+S003,Oficina Abriaquí,05004,Carrera 7 #8-22
+S004,Sucursal Manizales,17001,Av Santander #45
+S005,Punto Villamaría,17013,Calle 14 #12-10
