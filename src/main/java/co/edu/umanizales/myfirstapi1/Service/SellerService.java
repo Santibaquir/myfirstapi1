@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 public class SellerService {
     private final List<Seller> sellers = new ArrayList<>();
-
     private final LocationService locationService;
 
     public SellerService(LocationService locationService) {
@@ -28,7 +27,7 @@ public class SellerService {
     public void init() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new ClassPathResource("SellersListado.csv").getInputStream(), StandardCharsets.UTF_8));
+                    new ClassPathResource("Seller_list.csv").getInputStream(), StandardCharsets.UTF_8));
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -61,3 +60,4 @@ public class SellerService {
         return null;
     }
 }
+
