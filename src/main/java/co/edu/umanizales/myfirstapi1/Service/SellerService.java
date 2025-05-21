@@ -27,9 +27,9 @@ public class SellerService {
     public void init() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new ClassPathResource("Seller_list.csv").getInputStream(), StandardCharsets.UTF_8));
+                    new ClassPathResource("Sellers_List.csv").getInputStream(), StandardCharsets.UTF_8));
 
-            String line;
+            String line = reader.readLine(); // Saltar encabezado
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(";");
                 if (data.length >= 6) {
@@ -60,4 +60,5 @@ public class SellerService {
         return null;
     }
 }
+
 
