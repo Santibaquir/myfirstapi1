@@ -1,15 +1,22 @@
 package co.edu.umanizales.myfirstapi1.Model;
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-@AllArgsConstructor
-public class Sale implements Serializable {
-    private String code;
-    private String description;
 
+public class Sale {
+
+    private String saleCode;
+    private String saleProductName;
+    private float salePrice;
+    private String saleDescription;
+
+    public Sale(String saleCode, String saleProductName, float salePrice, String saleDescription) {
+        this.saleCode = saleCode;
+        this.saleProductName = saleProductName;
+        this.salePrice = salePrice;
+        this.saleDescription = saleDescription;
+    }
 }

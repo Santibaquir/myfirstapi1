@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/sale")
+
 public class SaleController {
 
     @GetMapping
-    public Sale getSale(){
-        return new Sale("001", "Venta de producto");
+    public Sale getSales(){
+
+        Sale sale1 = new Sale("000001", "toalla", (float)112.99, "---");
+
+        return sale1;
     }
 }
