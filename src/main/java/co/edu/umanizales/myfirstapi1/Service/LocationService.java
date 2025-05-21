@@ -1,91 +1,106 @@
 package co.edu.umanizales.myfirstapi1.Service;
 
 import co.edu.umanizales.myfirstapi1.Model.Location;
-import co.edu.umanizales.myfirstapi1.repository.LocationRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Service
-
+@Getter
 public class LocationService {
+    private List<Location> locations = new ArrayList<>();
 
-    private final LocationRepository locationRepository;
+    @PostConstruct
+    public void init() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    new ClassPathResource("DIVIPOLA-_C_digos_municipios_20250408.csv").getInputStream(), StandardCharsets.UTF_8));
 
-    public LocationService(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 3) {
+                    String departmentCode = data[0];
+                    String municipalityCode = data[1];
+                    String name = data[2];
+                    String fullCode = departmentCode + municipalityCode;
+
+                    Location department = getLocationByCode(departmentCode);
+                    if (department == null) {
+                        department = new Location(departmentCode, name);
+                        locations.add(department);
+                    } else {
+                        department.addSubLocation(new Location(fullCode, name));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Location> getAllLocations() {
-        return locationRepository.getAllLocations();
+        return locations;
     }
 
     public Location getLocationByCode(String code) {
-        return locationRepository.getLocationByCode(code);
-    }
-
-    public List<Location> getLocationByName(String name) {
-        return locationRepository.getLocationsByName(name);
-    }
-
-    public List<Location> getLocationsByInitialLetter(String initialLetter) {
-        List<Location> locationsByInitial = new ArrayList<>();
-        for (Location location : locationRepository.getAllLocations()) {
-            if (location.getName().startsWith(initialLetter)) {
-                locationsByInitial.add(location);
+        for (Location dept : locations) {
+            if (dept.getCode().equals(code)) return dept;
+            for (Location mun : dept.getSubLocations()) {
+                if (mun.getCode().equals(code)) return mun;
             }
         }
-        return locationsByInitial;
-    }
-
-    public List<Location> getLocationByDepartmentCode(String departmentCode) {
-        List<Location> locationsByDepartment = new ArrayList<>();
-        for (Location location : locationRepository.getAllLocations()) {
-            if (location.getCode().startsWith(departmentCode)) {
-                locationsByDepartment.add(location);
-            }
-        }
-        return locationsByDepartment;
-    }
-
-    public List<Location> getAllDepartments() {
-        return locationRepository.getAllDepartments();
-    }
-
-    public Location getDepartmentByCode(String code) {
-        if (code.length() != 2) {
-            System.out.println("Código: " + code + " no es válido para buscar departamentos. por favor ingrese un código de 2 dígitos"); //Si el código es inválido mostrará un error
-            return null;
-        }
-        for (Location location : locationRepository.getAllDepartments()) {
-            if (location.getCode().equals(code)) {
-                return location;
-            }
-        }
-        System.out.println("Departmento no encontrado con código: " + code);
         return null;
     }
 
-    public List<Location> getCapitals() {
-        List<Location> capitals = new ArrayList<>();
-        for (Location location : locationRepository.getAllLocations()) {
-            if (location.getCode().endsWith("001")) {
-                capitals.add(location);
+    public List<Location> getLocationByName(String name) {
+        List<Location> result = new ArrayList<>();
+        for (Location dept : locations) {
+            if (dept.getName().toLowerCase().contains(name.toLowerCase())) result.add(dept);
+            for (Location mun : dept.getSubLocations()) {
+                if (mun.getName().toLowerCase().contains(name.toLowerCase())) result.add(mun);
             }
         }
-        return capitals;
+        return result;
     }
 
-    public List<Location> getLocationByParameters(String initialLetter, String finalLetter) {
-        List<Location> locations = new ArrayList<>();
-        for (Location location : locationRepository.getAllLocations()) {
-            if (location.getName().startsWith(initialLetter) && location.getName().endsWith(finalLetter)) {
-                locations.add(location);
+    public List<Location> getLocationsByInitialLetter(String initial) {
+        List<Location> result = new ArrayList<>();
+        for (Location dept : locations) {
+            if (dept.getName().startsWith(initial)) result.add(dept);
+            for (Location mun : dept.getSubLocations()) {
+                if (mun.getName().startsWith(initial)) result.add(mun);
             }
         }
+        return result;
+    }
+
+    public List<Location> getLocationByDepartmentCode(String dCode) {
+        for (Location dept : locations) {
+            if (dept.getCode().equals(dCode)) {
+                return dept.getSubLocations();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public List<Location> getAllDepartments() {
         return locations;
+    }
+
+    public Location getDepartmentByCode(String code) {
+        for (Location dept : locations) {
+            if (dept.getCode().equals(code)) {
+                return dept;
+            }
+        }
+        return null;
     }
 }

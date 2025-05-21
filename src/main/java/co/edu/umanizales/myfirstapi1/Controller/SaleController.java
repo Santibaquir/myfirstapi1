@@ -1,20 +1,28 @@
 package co.edu.umanizales.myfirstapi1.Controller;
 
 import co.edu.umanizales.myfirstapi1.Model.Sale;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import co.edu.umanizales.myfirstapi1.Service.SaleService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/sale")
-
 public class SaleController {
 
+    private final SaleService saleService;
+
+    public SaleController(SaleService saleService) {
+        this.saleService = saleService;
+    }
+
     @GetMapping
-    public Sale getSales(){
+    public List<Sale> getAllSales() {
+        return saleService.getAllSales();
+    }
 
-        Sale sale1 = new Sale("000001", "toalla", (float)112.99, "---");
-
-        return sale1;
+    @GetMapping(path = "/code/{code}")
+    public Sale getSaleByCode(@PathVariable String code) {
+        return saleService.getSaleByCode(code);
     }
 }

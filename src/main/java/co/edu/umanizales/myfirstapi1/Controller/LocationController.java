@@ -2,27 +2,13 @@ package co.edu.umanizales.myfirstapi1.Controller;
 
 import co.edu.umanizales.myfirstapi1.Model.Location;
 import co.edu.umanizales.myfirstapi1.Service.LocationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/location")
-
 public class LocationController {
-
-    /*
-    @GetMapping
-    public Location getLocation(){
-        Location manizales = new Location("170001", "Manizales");
-
-        return manizales;
-
-    }
-    */
 
     private final LocationService locationService;
 
@@ -31,7 +17,7 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<Location> getLocations() {
+    public List<Location> getAllLocations() {
         return locationService.getAllLocations();
     }
 
@@ -41,22 +27,22 @@ public class LocationController {
     }
 
     @GetMapping(path = "/name/{name}")
-    public List<Location> getLocationByName(@PathVariable String name) {
+    public List<Location> getLocationsByName(@PathVariable String name) {
         return locationService.getLocationByName(name);
     }
 
     @GetMapping(path = "/initial/{letter}")
-    public List<Location> getLocationByInitial(@PathVariable String letter) {
+    public List<Location> getLocationsByInitialLetter(@PathVariable String letter) {
         return locationService.getLocationsByInitialLetter(letter);
     }
 
     @GetMapping(path = "/department_code/{dCode}")
-    public List<Location> getLocationByDepartmentCode(@PathVariable String dCode) {
+    public List<Location> getLocationsByDepartmentCode(@PathVariable String dCode) {
         return locationService.getLocationByDepartmentCode(dCode);
     }
 
     @GetMapping(path = "/departments")
-    public List<Location> getDepartments() {
+    public List<Location> getAllDepartments() {
         return locationService.getAllDepartments();
     }
 
@@ -64,16 +50,7 @@ public class LocationController {
     public Location getDepartment(@PathVariable String departmentCode) {
         return locationService.getDepartmentByCode(departmentCode);
     }
-
-    @GetMapping(path = "/capitals")
-    public List<Location> getCapitals() {
-        return locationService.getCapitals();
-    }
-
-    @GetMapping(path = "/startsWith = {initialLetter}/endsWith = {finalLetter}")
-    public List<Location> getParameterA(@PathVariable String initialLetter, @PathVariable String finalLetter) {
-        return locationService.getLocationByParameters(initialLetter, finalLetter);
-    }
 }
+
 
 
