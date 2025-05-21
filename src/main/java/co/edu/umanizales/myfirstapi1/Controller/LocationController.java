@@ -1,7 +1,7 @@
 package co.edu.umanizales.myfirstapi1.Controller;
 
-import co.edu.umanizales.myfirstapi.model.Location;
-import co.edu.umanizales.myfirstapi.service.LocationService;
+import co.edu.umanizales.myfirstapi1.Model.Location;
+import co.edu.umanizales.myfirstapi1.Service.LocationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,16 @@ import java.util.List;
 @RequestMapping(path = "/location")
 
 public class LocationController {
+
+    /*
+    @GetMapping
+    public Location getLocation(){
+        Location manizales = new Location("170001", "Manizales");
+
+        return manizales;
+
+    }
+    */
 
     private final LocationService locationService;
 

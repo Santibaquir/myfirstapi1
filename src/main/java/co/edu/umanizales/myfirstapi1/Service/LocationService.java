@@ -1,7 +1,7 @@
 package co.edu.umanizales.myfirstapi1.Service;
 
-import co.edu.umanizales.myfirstapi.model.Location;
-import co.edu.umanizales.myfirstapi.repository.LocationRepository;
+import co.edu.umanizales.myfirstapi1.Model.Location;
+import co.edu.umanizales.myfirstapi1.repository.LocationRepository;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -89,5 +89,3 @@ public class LocationService {
         return locations;
     }
 }
-
-
